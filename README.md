@@ -6,8 +6,8 @@ Depends on [*igraph*](http://igraph.org/).
 
 Example from [*Kovacs and Barabasi* News & Views article (2015)](http://www.ncbi.nlm.nih.gov/pubmed/26245576):
 (A) the initial network with highest collective influence node in red, highest degree node in yellow. (B) resultant network, with giant component intact, after removal of the 6 nodes with the highest degree. (C) resultant network after removal of top 4 influencers.
-![](Kovacs and Barabasi graph.jpg)
+![](img/Kovacs and Barabasi graph.jpg)
 
 The CI algorithm at work:
 
-![](collective_influence_animation.gif)
+![](img/collective_influence_animation.gif)
