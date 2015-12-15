@@ -176,7 +176,7 @@ getInfluencers <- function(g, d=3, verbose=FALSE, plot=FALSE, layout=FALSE,
   assert_that(cores >= 1)
   
   # Used to keep nodes in the same spot for each subsequent plot
-  if (layout) {
+  if (layout | plot) {
     fixedLayout <- layout_with_kk(g)
     if (plot) {
       plotg(g, layout=fixedLayout)
@@ -208,13 +208,12 @@ getInfluencers <- function(g, d=3, verbose=FALSE, plot=FALSE, layout=FALSE,
     g <- delete_vertices(g, toBeRemoved)
     
     # remove coordinates for the influencer node that was deleted
-    if (layout) {
+    if (layout | plot) {
       fixedLayout <- fixedLayout[-maxCIIndex, ]
-    }
-
-    # Plot each step
-    if (plot) {
-      plotg(g, layout=fixedLayout)
+      # Plot each step
+      if (plot) {
+        plotg(g, layout=fixedLayout)
+      }
     }
     
     # Recompute the CI and largest eigenvalue approximation
