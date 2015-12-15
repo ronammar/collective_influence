@@ -8,14 +8,16 @@ library(assertthat)
 library(igraph)
 library(parallel)
 
-plotg <- function(g, layout=layout_with_kk(g), community=FALSE) {
+plotg <- function(g, layout=layout_with_kk(g), community=FALSE,
+                  labels=V(g)$name) {
   # Convenience function for plotting graphs.
   if (community) {
-    plot(multilevel.community(g), g, vertex.size=20, vertex.label.cex=0.8,
-         edge.width=2, layout=layout)
-  } else {
-    plot(g, vertex.size=20, vertex.color="darkolivegreen3", 
+    plot(multilevel.community(g), g, vertex.label=labels, vertex.size=20,
          vertex.label.cex=0.8, edge.width=2, layout=layout)
+  } else {
+    plot(g, vertex.size=20, vertex.color="darkolivegreen3",
+         vertex.label=labels, vertex.label.cex=0.8, edge.width=2,
+         layout=layout)
   }
 }
 
@@ -143,7 +145,7 @@ approxLargestEigenvalue <- function(g, d, ci=NULL) {
 }
 
 getInfluencers <- function(g, d=3, verbose=FALSE, plot=FALSE, layout=FALSE,
-                           cores=1) {
+                           plotCILabels=FALSE, cores=1) {
   # Runs the collective influence algorithm by successively removing the 
   # maximal influencer from the graph until the giant component has been
   # destroyed.
@@ -162,6 +164,8 @@ getInfluencers <- function(g, d=3, verbose=FALSE, plot=FALSE, layout=FALSE,
   #   plot: plot each graph after removal of the influencer
   #   layout: track the layout of the graph to preserve node positions even as
   #       influencers are being removed from the network
+  #   plotCILabels: plot collective influence score as node labels instead of
+  #       node names
   #   cores: the number of processing cores to use (default = 1)
   #
   # Returns:
@@ -175,20 +179,25 @@ getInfluencers <- function(g, d=3, verbose=FALSE, plot=FALSE, layout=FALSE,
   assert_that(d > 0)
   assert_that(cores >= 1)
   
-  # Used to keep nodes in the same spot for each subsequent plot
-  if (layout | plot) {
-    fixedLayout <- layout_with_kk(g)
-    if (plot) {
-      plotg(g, layout=fixedLayout)
-    }
-  }
-  
   if(cores == 1) {
     ci <- collectiveInfluence(g, d)
   } else {
     ci <- collectiveInfluenceParallel(g, d, cores)
   }
-  
+
+  # Used to keep nodes in the same spot for each subsequent plot
+  if (layout | plot) {
+    fixedLayout <- layout_with_kk(g)
+  }
+  if (plot) {
+    if(plotCILabels) {
+      labels <- ci
+    } else {
+      labels <- V(g)$name
+    }
+    plotg(g, layout=fixedLayout, labels=labels)
+  }
+    
   ev <- approxLargestEigenvalue(g, d, ci)
   influencers <- vector("character")
   i <- 1
@@ -207,23 +216,28 @@ getInfluencers <- function(g, d=3, verbose=FALSE, plot=FALSE, layout=FALSE,
     # New network
     g <- delete_vertices(g, toBeRemoved)
     
-    # remove coordinates for the influencer node that was deleted
-    if (layout | plot) {
-      fixedLayout <- fixedLayout[-maxCIIndex, ]
-      # Plot each step
-      if (plot) {
-        plotg(g, layout=fixedLayout)
-      }
-    }
-    
     # Recompute the CI and largest eigenvalue approximation
     if(cores == 1) {
       ci <- collectiveInfluence(g, d)
     } else {
       ci <- collectiveInfluenceParallel(g, d, cores)
     }
-    
+
     ev <- approxLargestEigenvalue(g, d, ci)
+    
+    # remove coordinates for the influencer node that was deleted
+    if (layout | plot) {
+      fixedLayout <- fixedLayout[-maxCIIndex, ]
+    }
+    # Plot each step
+    if (plot) {
+      if(plotCILabels) {
+        labels <- ci
+      } else {
+        labels <- V(g)$name
+      }
+      plotg(g, layout=fixedLayout, labels=labels)
+    }
 
     # Optional verbose message
     if (verbose) {
