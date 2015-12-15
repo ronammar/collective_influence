@@ -6,6 +6,7 @@ summary <- "Collective Influence algorithm of Morone & Makse (2015) in R"
 
 library(assertthat)
 library(igraph)
+library(parallel)
 
 plotg <- function(g, layout=layout_with_kk(g), community=FALSE) {
   # Convenience function for plotting graphs.
