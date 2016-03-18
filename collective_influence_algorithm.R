@@ -145,7 +145,7 @@ approxLargestEigenvalue <- function(g, d, ci=NULL) {
 }
 
 getInfluencers <- function(g, d=3, verbose=FALSE, plot=FALSE, layout=FALSE,
-                           plotCILabels=FALSE, cores=1) {
+                           plotCILabels=FALSE, cores=1, maxInfluencers=NULL) {
   # Runs the collective influence algorithm by successively removing the 
   # maximal influencer from the graph until the giant component has been
   # destroyed.
@@ -167,6 +167,8 @@ getInfluencers <- function(g, d=3, verbose=FALSE, plot=FALSE, layout=FALSE,
   #   plotCILabels: plot collective influence score as node labels instead of
   #       node names
   #   cores: the number of processing cores to use (default = 1)
+  #   maxInfluencers: the maximum number of influencers to compute (by default
+  #       it computes all influencers until the eigenvalue reaches 1)
   #
   # Returns:
   #   A list containing 2 objects:
@@ -204,7 +206,7 @@ getInfluencers <- function(g, d=3, verbose=FALSE, plot=FALSE, layout=FALSE,
   
   # Keep removing the maximal CI nodes until the eigenvalue = 1. For practical
   # implementation purposes, we continue removing influencers until ev <= 1.
-  while (ev > 1) {
+  while (ev > 1 & (is.null(maxInfluencers) || i <= maxInfluencers)) {  # use short-circuiting or "||" not "|'
     # update this for each iteration since nodes have been removed
     nodes <- V(g)$name
     
