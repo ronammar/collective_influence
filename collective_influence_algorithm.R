@@ -1,8 +1,21 @@
-author <- "Ron Ammar <ron.ammar@bms.com>"
-company <- "Bristol-Myers Squibb Co."
-date <- as.Date("2015-11-10")
-version <- "0.1.0"
-summary <- "Collective Influence algorithm of Morone & Makse (2015) in R"
+# Author: Ron Ammar
+# Contact: ron.ammar@bms.com
+# Company: Bristol-Myers Squibb Co.
+# Description: Collective Influence algorithm of Morone & Makse (2015) in R
+# Start date: 2015-11-10
+# Version 0.1.1  (Follow Semantic Versioning (semver.org): MAJOR.MINOR.PATCH)
+
+
+##### The following section improves reproducibility when scripting ------------
+
+# Manually set the seed to an arbitrary number for consistency in reports
+set.seed(1234)
+
+# Do not convert character vectors to factors unless explicitly indicated
+options(stringsAsFactors=FALSE)
+
+#-------------------------------------------------------------------------------
+
 
 library(assertthat)
 library(igraph)
