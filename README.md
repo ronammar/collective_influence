@@ -11,7 +11,7 @@ If you want to test this out quickly:
 source("collective_influence_algorithm.R")
 plotg(exampleGraph(), community=T)
 # find influencers, remove them, and plot the results after each removal
-getInfluencers(exampleGraph(), d=2, plot=T)
+g <- getInfluencers(exampleGraph(), d=2, plot=T)
 ```
 
 ### More information

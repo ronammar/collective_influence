@@ -17,7 +17,7 @@ options(stringsAsFactors=FALSE)
 #-------------------------------------------------------------------------------
 
 
-library(assertthat)
+library(checkmate)
 library(igraph)
 library(parallel)
 
@@ -69,7 +69,7 @@ collectiveInfluence <- function(g, d=3) {
   #   A vector of collective influence for each vertex of the graph
   #   corresponding to the order of vertices output by V(g).
   
-  assert_that(d > 0)
+  assert(d > 0)
 
   ci <- vector(mode="integer", length=length(V(g)))  # collective influence output
   
@@ -112,7 +112,7 @@ collectiveInfluenceParallel <- function(g, d=3, cores=detectCores()) {
   #   A vector of collective influence for each vertex of the graph
   #   corresponding to the order of vertices output by V(g).
   
-  assert_that(d > 0)
+  assert(d > 0)
   
   # Store in case multiple V(g) calls takes more time
   allNodes <- V(g)
@@ -189,10 +189,8 @@ getInfluencers <- function(g, d=3, verbose=FALSE, plot=FALSE, layout=FALSE,
   #   2) A complete list of influencers that, once removed, destroy the giant
   #   component of the network. Returned as a character vector of node names.
   
-  assert_that(!is.null(V(g)$name))
-  assert_that(!any(duplicated(V(g)$name)))
-  assert_that(d > 0)
-  assert_that(cores >= 1)
+  assert(!is.null(V(g)$name), !any(duplicated(V(g)$name)), d > 0, cores >= 1,
+         combine="and")
   
   if(cores == 1) {
     ci <- collectiveInfluence(g, d)
