@@ -14,6 +14,8 @@ plotg(exampleGraph(), community=T)
 g <- getInfluencers(exampleGraph(), d=2, plot=T)
 ```
 
+Note that `getInfluencers()` is parallelized , which can improve processing time for collective influence on large networks when multiple processing cores are available. Simply specify the number of cores to use.
+
 ### More information
 
 Example from [*Kovacs and Barabasi* News & Views article (2015)](http://www.ncbi.nlm.nih.gov/pubmed/26245576):
