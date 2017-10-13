@@ -8,7 +8,7 @@ Depends on [*igraph*](http://igraph.org/).
 
 If you want to test this out quickly:
 ```r
-source("http://biogit.pri.bms.com/raw/ammarr/collective_influence/master/collective_influence_algorithm.R")
+source("collective_influence_algorithm.R")
 plotg(exampleGraph(), community=T)
 # find influencers, remove them, and plot the results after each removal
 getInfluencers(exampleGraph(), d=2, plot=T)

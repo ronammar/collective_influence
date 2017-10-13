@@ -3,7 +3,7 @@
 # Company: Bristol-Myers Squibb Co.
 # Description: Collective Influence algorithm of Morone & Makse (2015) in R
 # Start date: 2015-11-10
-# Version 0.1.1  (Follow Semantic Versioning (semver.org): MAJOR.MINOR.PATCH)
+# Version 0.1.1
 
 
 ##### The following section improves reproducibility when scripting ------------
